@@ -137,7 +137,7 @@ app.get("/api/stoerer", async (req, res) => {
     let stoerer = await stoererCollection.findOne()
 
     if (!stoerer) {
-      stoerer = { line1: "", line2: "", isActive: true }
+      stoerer = { line1: "", line2: "", isActive: false }
       await stoererCollection.insertOne(stoerer)
     }
 
@@ -205,7 +205,7 @@ app.delete("/api/admin/stoerer", authenticateToken, async (req, res) => {
         $set: {
           line1: "",
           line2: "",
-          isActive: false,
+          isActive: true,
           updatedAt: new Date(),
         },
       }
