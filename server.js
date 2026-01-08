@@ -205,7 +205,7 @@ app.delete("/api/admin/stoerer", authenticateToken, async (req, res) => {
         $set: {
           line1: "",
           line2: "",
-          isActive: true,
+          isActive: false,
           updatedAt: new Date(),
         },
       }
