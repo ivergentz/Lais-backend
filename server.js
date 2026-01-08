@@ -11,17 +11,21 @@ const app = express()
 const PORT = process.env.PORT || 5001
 
 // Middleware
-// CORS - Erlaubt mehrere Origins
+// CORS - Mehrere Origins erlauben (Development + Production)
 const allowedOrigins = process.env.CLIENT_URL
-  ? process.env.CLIENT_URL.split(",")
+  ? process.env.CLIENT_URL.split(",").map((origin) => origin.trim())
   : ["http://localhost:3000"]
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
+      // Erlaube requests ohne origin (z.B. Postman, mobile apps)
+      if (!origin) return callback(null, true)
+
+      if (allowedOrigins.includes(origin)) {
         callback(null, true)
       } else {
+        console.log("❌ CORS blocked:", origin)
         callback(new Error("Not allowed by CORS"))
       }
     },
