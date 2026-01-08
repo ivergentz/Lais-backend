@@ -12,20 +12,14 @@ const PORT = process.env.PORT || 5001
 
 // Middleware
 // CORS - Erlaubt mehrere Origins
-const allowedOrigins = [
-  "http://localhost:3000",
-  "http://localhost:3001",
-  "https://www.lais-ottensen.de",
-  process.env.CLIENT_URL,
-].filter(Boolean)
+const allowedOrigins = process.env.CLIENT_URL
+  ? process.env.CLIENT_URL.split(",")
+  : ["http://localhost:3000"]
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Erlaube requests ohne origin (z.B. mobile apps, Postman)
-      if (!origin) return callback(null, true)
-
-      if (allowedOrigins.indexOf(origin) !== -1) {
+      if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true)
       } else {
         callback(new Error("Not allowed by CORS"))
@@ -36,6 +30,7 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
   })
 )
+
 app.use(bodyParser.json())
 app.use(cookieParser())
 
