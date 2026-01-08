@@ -117,9 +117,13 @@ app.post("/api/admin/login", async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: false, // Für localhost MUSS das false sein!
       sameSite: "lax",
       maxAge: 24 * 60 * 60 * 1000,
+      domain:
+        process.env.NODE_ENV === "production"
+          ? ".lais-ottensen.de"
+          : "localhost",
     })
 
     res.json({
