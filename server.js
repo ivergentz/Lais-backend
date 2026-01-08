@@ -10,7 +10,6 @@ require("dotenv").config()
 const app = express()
 const PORT = process.env.PORT || 5001
 
-// Middleware
 // CORS - Mehrere Origins erlauben (Development + Production)
 const allowedOrigins = process.env.CLIENT_URL
   ? process.env.CLIENT_URL.split(",").map((origin) => origin.trim())
@@ -115,26 +114,19 @@ app.post("/api/admin/login", async (req, res) => {
       { expiresIn: "24h" }
     )
 
-    // Cookie-Settings für Development und Production
-    const cookieOptions = {
+    // Cookie setzen (für Production)
+    res.cookie("token", token, {
       httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000,
+      secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "lax" : "none",
-      secure: process.env.NODE_ENV === "production" ? true : false,
-    }
+      maxAge: 24 * 60 * 60 * 1000,
+    })
 
-    // Für localhost: Domain nicht setzen
-    if (process.env.NODE_ENV !== "production") {
-      // Keine Domain für localhost
-    } else {
-      cookieOptions.domain = ".lais-ottensen.de"
-    }
-
-    res.cookie("token", token, cookieOptions)
-
+    // Token AUCH zurückgeben (für Development mit localStorage)
     res.json({
       message: "Erfolgreich angemeldet",
       username: admin.username,
+      token: token,
     })
   } catch (error) {
     console.error("Login-Fehler:", error)
