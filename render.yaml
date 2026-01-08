@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: lais-backend-node
+    runtime: node
+    region: frankfurt
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /api/stoerer
