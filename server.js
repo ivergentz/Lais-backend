@@ -137,7 +137,7 @@ app.get("/api/stoerer", async (req, res) => {
     let stoerer = await stoererCollection.findOne()
 
     if (!stoerer) {
-      stoerer = { line1: "", line2: "", isActive: false }
+      stoerer = { line1: "", line2: "", isActive: true }
       await stoererCollection.insertOne(stoerer)
     }
 
